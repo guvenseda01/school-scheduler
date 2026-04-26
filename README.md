@@ -254,28 +254,3 @@ The frontend assumes the backend is running at `http://127.0.0.1:8000`.
 4. Click **Generate schedule**.
 5. Drag any lesson around the grid. Drag any *Unassigned lesson* card onto a free slot.
 6. Stop the backend, restart it, refresh the page — the schedule is still there (this is the proof that the data is persisted in the database, not in memory).
-
----
-
-## 12. How I used AI tooling
-
-I used an AI coding assistant throughout the build, primarily for:
-
-- scaffolding the layered backend (`models / schemas / crud / scheduler / main`),
-- drafting the Alembic migrations and the seed data,
-- pair-debugging environment issues (uvicorn reload loops, Next.js Turbopack startup, CORS, port collisions),
-- iterating on the optimizer (greedy → branch-and-bound)
-- iterating on the UX (color-coding teachers, filtering teachers by subject in the requirement form, turning unassigned lessons into draggable cards).
-
-Every architectural decision in this README — choosing SQLite + Alembic, splitting the codebase into layers, the constraint set, the optimizer's two-goal scoring, the drag-and-drop UX etc. was a decision I made and validated. The assistant accelerated the implementation; the framing, trade-offs and rejections were mine.
-
----
-
-## 13. What I would do next given more time
-
-- Replace the bounded branch-and-bound solver with an OR-Tools CP-SAT model and use it as a drop-in implementation behind the same `scheduler.py` interface, then compare both on the same input.
-- Add **rooms** as a first-class entity with their own availability.
-- Add daily / weekly **load caps** per teacher and per class.
-- Add **soft preferences** (e.g. *"this teacher prefers mornings"*) and a tunable weight per preference.
-- Add lightweight **import / export** (CSV or Excel) so a real administrator can bring their existing data.
-- Add automated tests for the optimizer and the manual placement endpoints (currently verified manually via the smoke test in §11.3).
